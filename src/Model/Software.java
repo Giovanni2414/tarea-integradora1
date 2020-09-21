@@ -1,5 +1,10 @@
 package Model;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -157,19 +162,98 @@ public class Software {
 		String message = "-------------------\n";
 		message += "    Restaurants    \n";
 		for (int c = 0; c < restaurants.size(); c++) {
-			message += "-------------------\n";
-			message += "Name:" + restaurants.get(c).getName() + "\n";
-			message += "Name admin:" + restaurants.get(c).getNameAdmin() + "\n";
-			message += "Nit:" + restaurants.get(c).getNit() + "\n";
+			message += restaurants.get(c);
 		}
 		message += "-------------------\n";
 		return message;
 	}
 	
-	public String exportRestaurantData() {
-		String message = "";
-		
+	public String getDescriptionAllClients() {
+		String message = "-------------------\n";
+		message += "    Clients    \n";
+		for (int c = 0; c < clients.size(); c++) {
+			message += clients.get(c);
+		}
+		message += "-------------------\n";
 		return message;
+	}
+	
+	public String exportRestaurantData(String fileName) throws FileNotFoundException {
+		String message = "Data was exported successfully";
+		PrintWriter pw = new PrintWriter("data/" + fileName + ".csv");
+
+	    for(int i=0;i<restaurants.size();i++){
+	      Restaurant myRestaurant = restaurants.get(i);
+	      pw.println(myRestaurant.getName()+","+myRestaurant.getNit()+","+myRestaurant.getNameAdmin());
+	    }
+
+	    pw.close();
+		return message;
+	}
+	
+	public String exportClientData(String fileName) throws FileNotFoundException {
+		String message = "Data was exported successfully";
+		PrintWriter pw = new PrintWriter("data/" + fileName + ".csv");
+
+	    for(int i=0;i<clients.size();i++){
+	      Client myClient = clients.get(i);
+	      pw.println(myClient.getName()+","+myClient.getIdentificationTypeForExport()+","+myClient.getIdentificationNumber()+","+myClient.getPhone()+","+myClient.getAddress());
+	    }
+
+	    pw.close();
+		return message;
+	}
+	
+	public String exportProductData(String fileName) throws FileNotFoundException {
+		String message = "Data was exported successfully";
+		PrintWriter pw = new PrintWriter("data/" + fileName + ".csv");
+
+	    for(int i=0;i<products.size();i++){
+	      Product myProduct = products.get(i);
+	      pw.println(myProduct.getName()+","+myProduct.getPrice()+","+myProduct.getCode()+","+myProduct.getDescription()+","+myProduct.getRestaurantNit());
+	    }
+
+	    pw.close();
+		return message;
+	}
+	
+	public String exportOrderData(String fileName) throws FileNotFoundException {
+		String message = "Data was exported successfully";
+		PrintWriter pw = new PrintWriter("data/" + fileName + ".csv");
+
+	    for(int i=0;i<orders.size();i++){
+	      Order myOrder = orders.get(i);
+	      pw.println(myOrder.getClientCode()+","+myOrder.getCode()+","+myOrder.getRestaurantNit()+","+myOrder.getDateOrder()+","+myOrder.getListProductsToExport());
+	    }
+
+	    pw.close();
+		return message;
+	}
+	
+	public String importRestaurantData(String fileName) throws IOException {
+		String msg = "Data was imported succesfully";
+	    BufferedReader br = new BufferedReader(new FileReader("data/" + fileName + ".csv"));
+	    String line = br.readLine();
+	    while(line!=null){
+	      String[] parts = line.split(",");
+	      addRestaurant(parts[0], parts[1], parts[2]);
+	      line = br.readLine();
+	    }
+	    br.close();
+	    return msg;
+	}
+	
+	public String importClientData(String fileName) throws IOException, NumberFormatException, InvalidOptionException {
+		String msg = "Data was imported succesfully";
+	    BufferedReader br = new BufferedReader(new FileReader("data/" + fileName + ".csv"));
+	    String line = br.readLine();
+	    while(line!=null){
+	      String[] parts = line.split(",");
+	      addClient(Integer.parseInt(parts[1]), parts[2], parts[0], parts[3], parts[4]);
+	      line = br.readLine();
+	    }
+	    br.close();
+	    return msg;
 	}
 	
 }

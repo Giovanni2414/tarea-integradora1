@@ -29,6 +29,28 @@ public class Client {
 		}
 	}
 	
+	public int getIdentificationTypeForExport() {
+		int response = 0;
+		if (identificationType.equals("Cédula")) {
+			response = CEDULA;
+		} else if (identificationType.equals("Pasaporte")) {
+			response = PASSPORT;
+		} else {
+			response = TARJETA_IDENTIDAD;
+		}
+		return response;
+	}
+	
+	public String toString() {
+		String message = "-------------------\n";
+		message += "Name:" + getName() + "\n";
+		message += "Id type: " + getIdentificationType() + "\n";
+		message += "Id number:" + getIdentificationNumber() + "\n";
+		message += "Phone:" + getPhone() + "\n";
+		message += "Address:" + getAddress() + "\n";
+		return message;
+	}
+	
 	/** Getters and Setters */
 	public void setIdentificationType(int identificationType) {
 		switch(identificationType) {

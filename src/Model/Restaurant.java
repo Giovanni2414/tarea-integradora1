@@ -12,6 +12,14 @@ public class Restaurant implements Comparable<Restaurant> {
 		this.nit = nit;
 	}
 	
+	public String toString() {
+		String message = "-------------------\n";
+		message += "Name:" + getName() + "\n";
+		message += "Name admin:" + getNameAdmin() + "\n";
+		message += "Nit:" + getNit() + "\n";
+		return message;
+	}
+	
 	@Override
 	public int compareTo(Restaurant otherRestaurant) {
 		int response = name.compareToIgnoreCase(otherRestaurant.getName());

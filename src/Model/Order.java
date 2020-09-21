@@ -1,12 +1,12 @@
 package Model;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 public class Order {
 	
 	private String code;
-	private Date dateOrder;
+	private String dateOrder;
 	private String clientCode;
 	private String restaurantNit;
 	private ArrayList<String> productList;
@@ -19,6 +19,22 @@ public class Order {
 		this.clientCode = clientCode;
 		this.restaurantNit = restaurantNit;
 		productList = new ArrayList<>();
+		int day = Calendar.DATE;
+		int month = Calendar.MONTH;
+		int year = Calendar.YEAR;
+		dateOrder = String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
+	}
+	
+	public String getListProductsToExport() {
+		String msg = "";
+		for (int c = 0; c < productList.size(); c++) {
+			if ((c+1) == productList.size()) {
+				msg += productList.get(c);
+			} else {
+				msg += productList.get(c) + ":";
+			}
+		}
+		return msg;
 	}
 	
 	public void addProduct(String code) {
@@ -29,7 +45,7 @@ public class Order {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	public void setDate(Date dateOrder) {
+	public void setDate(String dateOrder) {
 		this.dateOrder = dateOrder;
 	}
 	public void setClientCode(String clientCode) {
@@ -44,7 +60,7 @@ public class Order {
 	public String getCode() {
 		return code;
 	}
-	public Date getDateOrder() {
+	public String getDateOrder() {
 		return dateOrder;
 	}
 	public String getClientCode() {

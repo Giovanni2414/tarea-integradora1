@@ -27,6 +27,8 @@ public class Menu {
 			bw.write(getMenuMessage());
 			bw.flush();
 			try {
+				bw.write("Option: ");
+				bw.flush();
 				option = Integer.parseInt(br.readLine());
 			} catch (NumberFormatException e) {
 				bw.write("Error, invalid type character");
@@ -38,8 +40,9 @@ public class Menu {
 				case 2: registerClient(); break;
 				case 3: registerProduct(); break;
 				case 4: registerNewOrder(); break;
-				case 5: showRestaurants(); break;
+				case 5: showDataMenu(); break;
 				case 6: exportDataMenu(); break;
+				case 7: importDataMenu(); break;
 				default: 
 					bw.write("Error, Enter a valid option");
 					bw.flush();
@@ -51,14 +54,91 @@ public class Menu {
 	private void exportDataMenu() throws IOException {
 		bw.write(getExportMenuMessage());
 		bw.flush();
+		bw.write("Option: ");
+		bw.flush();
 		int option = Integer.parseInt(br.readLine());
 		switch (option) {
 			case 1: exportRestaurantData(); break;
+			case 2: exportProductData(); break;
+			case 3: exportClientData(); break;
+			case 4: exportOrderData(); break;
 		}
 	}
 	
-	private void exportRestaurantData() {
-		
+	private void showDataMenu() throws IOException {
+		bw.write(getInformationMenuMessage());
+		bw.flush();
+		bw.write("Option: ");
+		bw.flush();
+		int option = Integer.parseInt(br.readLine());
+		switch (option) {
+			case 1: showRestaurants(); break;
+			case 2: showClients(); break;
+			case 3:  break;
+			case 4:  break;
+		}
+	}
+	
+	private void importDataMenu() throws IOException, NumberFormatException, InvalidOptionException {
+		bw.write(getImportMenuMessage());
+		bw.flush();
+		bw.write("Option: ");
+		bw.flush();
+		int option = Integer.parseInt(br.readLine());
+		switch (option) {
+			case 1: importRestaurantData(); break;
+			case 2: importClientData(); break;
+			case 3:  break;
+			case 4:  break;
+		}
+	}
+	
+	private void exportRestaurantData() throws IOException {
+		bw.write("File name to export restaurant data (Do not put the extension, that archive will be a .csv): ");
+		bw.flush();
+		String nameFile = br.readLine();
+		bw.write(index.exportRestaurantData(nameFile));
+		bw.flush();
+	}
+	
+	private void exportProductData() throws IOException {
+		bw.write("File name to export products data (Do not put the extension, that archive will be a .csv): ");
+		bw.flush();
+		String nameFile = br.readLine();
+		bw.write(index.exportProductData(nameFile));
+		bw.flush();
+	}
+	
+	private void exportClientData() throws IOException {
+		bw.write("File name to export clients data (Do not put the extension, that archive will be a .csv): ");
+		bw.flush();
+		String nameFile = br.readLine();
+		bw.write(index.exportClientData(nameFile));
+		bw.flush();
+	}
+	
+	private void exportOrderData() throws IOException {
+		bw.write("File name to export orders data (Do not put the extension, that archive will be a .csv): ");
+		bw.flush();
+		String nameFile = br.readLine();
+		bw.write(index.exportOrderData(nameFile));
+		bw.flush();
+	}
+	
+	private void importRestaurantData() throws IOException {
+		bw.write("File name to import restaurants data (Do not put the extension, that archive will be a .csv): ");
+		bw.flush();
+		String nameFile = br.readLine();
+		bw.write(index.importRestaurantData(nameFile));
+		bw.flush();
+	}
+	
+	private void importClientData() throws IOException, NumberFormatException, InvalidOptionException {
+		bw.write("File name to import restaurants data (Do not put the extension, that archive will be a .csv): ");
+		bw.flush();
+		String nameFile = br.readLine();
+		bw.write(index.importClientData(nameFile));
+		bw.flush();
 	}
 	
 	private void exitProgram() throws IOException {
@@ -73,8 +153,9 @@ public class Menu {
 		message += "(2) Register a new client\n";
 		message += "(3) Register a new Product\n";
 		message += "(4) Register a new Order\n";
-		message += "(5) Show all restaurants\n";
+		message += "(5) Show information\n";
 		message += "(6) Export data\n";
+		message += "(7) Import data\n";
 		return message;
 	}
 	
@@ -83,8 +164,28 @@ public class Menu {
 		message += "(0) Exit menu\n";
 		message += "(1) Export restaurant data\n";
 		message += "(2) Export products data\n";
-		message += "(3) Export products data\n";
+		message += "(3) Export clients data\n";
 		message += "(4) Export orders data\n";
+		return message;
+	}
+	
+	private String getImportMenuMessage() {
+		String message = "\nEnter an option\n";
+		message += "(0) Exit menu\n";
+		message += "(1) Import restaurant data\n";
+		message += "(2) Import clients data\n";
+		message += "(3) Import products data\n";
+		message += "(4) Import orders data\n";
+		return message;
+	}
+	
+	private String getInformationMenuMessage() {
+		String message = "\nEnter an option\n";
+		message += "(0) Exit menu\n";
+		message += "(1) Show restaurants data\n";
+		message += "(2) Show clients data\n";
+		message += "(3) Show products data\n";
+		message += "(4) Show orders data\n";
 		return message;
 	}
 	
@@ -176,6 +277,11 @@ public class Menu {
 	
 	private void showRestaurants() throws IOException {
 		bw.write(index.getDescriptionAllRestaurants());
+		bw.flush();
+	}
+	
+	private void showClients() throws IOException {
+		bw.write(index.getDescriptionAllClients());
 		bw.flush();
 	}
 	
