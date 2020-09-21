@@ -4,17 +4,25 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Order {
+	
 	private String code;
 	private Date dateOrder;
 	private String clientCode;
 	private String restaurantNit;
 	private ArrayList<String> productList;
+	
 	public Order (String clientCode, String restaurantNit) {
-		for (int c = 0; c < 4; c++) {
+		code = "";
+		for (int c = 0; c < 5; c++) {
 			code += String.valueOf(Math.round(Math.random() * 9));
 		}
 		this.clientCode = clientCode;
 		this.restaurantNit = restaurantNit;
+		productList = new ArrayList<>();
+	}
+	
+	public void addProduct(String code) {
+		productList.add(code);
 	}
 	
 	/** Getters and Setters */

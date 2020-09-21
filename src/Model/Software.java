@@ -32,13 +32,14 @@ public class Software {
 		String message = "";
 		boolean find = false;
 		for (int c = 0; c < restaurants.size() && !find; c++) {
-			if (rn.equals(restaurants.get(c).getNit())) {
+			if (rn.equalsIgnoreCase(restaurants.get(c).getNit())) {
 				products.add(new Product(cd, n, d, p, rn));
 				find = true;
 				message = "The product has been added\n";
-			} else if ( (c - 1) == restaurants.size() && !find) {
-				message = "The product can't be added, the restaurant with this NIT dont exists\n";
 			}
+		}
+		if (!find) {
+			message = "The product can't be added, the restaurant with this NIT do not exists\n";
 		}
 		return message;
 	}
@@ -73,8 +74,24 @@ public class Software {
 		return message;
 	}
 	
-	public void addProductToListOrder(String c) {
-		
+	public String addProductToListOrder(String cr, String cp, String orderC) {
+		String message = "The product can't be added at the order, the code of the restaurant or product is bad\n";
+		for (int i = 0; i < products.size(); i++) {
+			if ((products.get(i).getCode()).equalsIgnoreCase(cp) && (products.get(i).getRestaurantNit()).equalsIgnoreCase(cr)) {
+				for (int c = 0; c < orders.size(); c++) {
+					if (orderC.equalsIgnoreCase(orders.get(c).getCode())) {
+						orders.get(c).addProduct(cp);
+						message = "Product added successfully to the order\n";
+					}
+				}
+			}
+		}
+		return message;
+	}
+	
+	public String getLastCodeOrder() {
+		String response = orders.get(orders.size() - 1).getCode();
+		return response;
 	}
 	
 	public void verifyClient(String cc) throws ClientDontExistException {
@@ -82,9 +99,10 @@ public class Software {
 		for (int c = 0; c < clients.size() && !clientFind; c++) {
 			if ((clients.get(c).getIdentificationNumber()).equalsIgnoreCase(cc)) {
 				clientFind = true;
-			} else if ((c - 1) == restaurants.size() && !clientFind) {
-				throw new ClientDontExistException();
 			}
+		}
+		if (!clientFind) {
+			throw new ClientDontExistException();
 		}
 	}
 	
@@ -93,9 +111,10 @@ public class Software {
 		for (int c = 0; c < restaurants.size() && !restaurantFind; c++) {
 			if ((restaurants.get(c).getNit()).equalsIgnoreCase(rn)) {
 				restaurantFind = true;
-			} else if ((c - 1) == restaurants.size() && !restaurantFind) {
-				throw new RestaurantDontExistException();
 			}
+		}
+		if (!restaurantFind) {
+			throw new RestaurantDontExistException();
 		}
 	}
 	
@@ -132,6 +151,25 @@ public class Software {
 			return response;
 		}
 		
+	}
+	
+	public String getDescriptionAllRestaurants() {
+		String message = "-------------------\n";
+		message += "    Restaurants    \n";
+		for (int c = 0; c < restaurants.size(); c++) {
+			message += "-------------------\n";
+			message += "Name:" + restaurants.get(c).getName() + "\n";
+			message += "Name admin:" + restaurants.get(c).getNameAdmin() + "\n";
+			message += "Nit:" + restaurants.get(c).getNit() + "\n";
+		}
+		message += "-------------------\n";
+		return message;
+	}
+	
+	public String exportRestaurantData() {
+		String message = "";
+		
+		return message;
 	}
 	
 }
