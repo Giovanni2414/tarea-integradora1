@@ -10,9 +10,8 @@ public class Order {
 	private String restaurantNit;
 	private ArrayList<String> productList;
 	public Order (String clientCode, String restaurantNit) {
-		String[] generatedUUID = new String[8];
 		for (int c = 0; c < 4; c++) {
-			generatedUUID[c] = String.valueOf(Math.random());
+			code += String.valueOf(Math.round(Math.random() * 9));
 		}
 		this.clientCode = clientCode;
 		this.restaurantNit = restaurantNit;

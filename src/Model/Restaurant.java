@@ -1,13 +1,21 @@
 package Model;
 
-public class Restaurant {
+public class Restaurant implements Comparable<Restaurant> {
+	
 	private String name;
 	private String nameAdmin;
 	private String nit;
+	
 	public Restaurant(String name, String nameAdmin, String nit) {
 		this.name = name;
 		this.nameAdmin = nameAdmin;
 		this.nit = nit;
+	}
+	
+	@Override
+	public int compareTo(Restaurant otherRestaurant) {
+		int response = name.compareToIgnoreCase(otherRestaurant.getName());
+		return response;
 	}
 	
 	/*Getters and Setters*/
@@ -29,4 +37,5 @@ public class Restaurant {
 	public String getNit() {
 		return nit;
 	}
+	
 }

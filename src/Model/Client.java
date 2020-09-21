@@ -1,14 +1,16 @@
 package Model;
 
 public class Client {
-	private final int CEDULA = 0;
-	private final int TARJETA_IDENTIDAD = 1;
-	private final int PASSPORT = 2;
+	
+	private final int CEDULA = 1;
+	private final int TARJETA_IDENTIDAD = 2;
+	private final int PASSPORT = 3;
 	private String identificationType;
 	private String identificationNumber;
 	private String name;
 	private String phone;
 	private String address;
+	
 	public Client(int identificationType, String identificationNumber, String name, String phone, String address) {
 		this.identificationNumber = identificationNumber;
 		this.name = name;
@@ -68,4 +70,5 @@ public class Client {
 	public String getAddress() {
 		return address;
 	}
+	
 }
