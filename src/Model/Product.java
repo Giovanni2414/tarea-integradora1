@@ -14,6 +14,13 @@ public class Product {
 		this.restaurantNit = restaurantNit;
 	}
 	
+	@Override
+	public String toString() {
+		String msg = "-------------------";
+		msg += "Code:" + getCode() + " - Name:" + getName() + " - Description:" + getDescription() + " - Price:" + getPrice() + "-Restaurant ID: " + getRestaurantNit();
+		return msg;
+	}
+	
 	/**Getters and Setters*/
 	public void setCode(String code) {
 		this.code = code;

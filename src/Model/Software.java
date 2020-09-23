@@ -55,13 +55,32 @@ public class Software {
 			if (it < 1 || it > 3) {
 				throw new InvalidOptionException();
 			} else {
-				clients.add(new Client(it, in, n, p, a));
+				if (clients.isEmpty()) {
+					clients.add(new Client(it, in, n, p, a));
+				} else {
+					int c = 0;
+					while (c < clients.size() && comparatorAddClient(n, clients.get(c).getName()) >= 1) {
+						c++;
+					}
+					clients.add(c, new Client(it, in, n, p, a));
+				}
 				message = "Client added successfully\n";
 			}
 		} catch (InvalidOptionException e) {
 			message = e.getMessage();
 		}
 		return message;
+	}
+	
+	private int comparatorAddClient(String name1, String name2) {
+		int res = 0;
+		String[] name1S = name1.split(" ");
+		String[] name2S = name2.split(" ");
+		res = String.valueOf(name1S[0].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[0].charAt(0)));
+		if (res == 0) {
+			res = String.valueOf(name1S[1].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[1].charAt(0)));
+		}
+		return res;
 	}
 	
 	public String addOrder(String cc, String rn) {
@@ -159,7 +178,7 @@ public class Software {
 	}
 	
 	public String getDescriptionAllRestaurants() {
-		String message = "-------------------\n";
+		String message = "\n-------------------\n";
 		message += "    Restaurants    \n";
 		for (int c = 0; c < restaurants.size(); c++) {
 			message += restaurants.get(c);
@@ -169,10 +188,30 @@ public class Software {
 	}
 	
 	public String getDescriptionAllClients() {
-		String message = "-------------------\n";
+		String message = "\n-------------------\n";
 		message += "    Clients    \n";
 		for (int c = 0; c < clients.size(); c++) {
 			message += clients.get(c);
+		}
+		message += "-------------------\n";
+		return message;
+	}
+	
+	public String getDescriptionAllProducts() {
+		String message = "\n-------------------\n";
+		message += "    Clients    \n";
+		for (int c = 0; c < products.size(); c++) {
+			message += products.get(c);
+		}
+		message += "-------------------\n";
+		return message;
+	}
+	
+	public String getDescriptionAllOrders() {
+		String message = "\n-------------------\n";
+		message += "    Orders    \n";
+		for (int c = 0; c < orders.size(); c++) {
+			message += orders.get(c);
 		}
 		message += "-------------------\n";
 		return message;
@@ -250,6 +289,19 @@ public class Software {
 	    while(line!=null){
 	      String[] parts = line.split(",");
 	      addClient(Integer.parseInt(parts[1]), parts[2], parts[0], parts[3], parts[4]);
+	      line = br.readLine();
+	    }
+	    br.close();
+	    return msg;
+	}
+	
+	public String importProductData(String fileName) throws IOException, NumberFormatException, InvalidOptionException {
+		String msg = "Data was imported succesfully";
+	    BufferedReader br = new BufferedReader(new FileReader("data/" + fileName + ".csv"));
+	    String line = br.readLine();
+	    while(line!=null){
+	      String[] parts = line.split(",");
+	      addProduct(parts[2], parts[0], parts[3], Double.parseDouble(parts[1]), parts[4]);
 	      line = br.readLine();
 	    }
 	    br.close();

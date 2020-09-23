@@ -25,6 +25,18 @@ public class Order {
 		dateOrder = String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
 	}
 	
+	public String toString() {
+		String msg = "Code: " + getCode() + " - Date: " + getDateOrder() + " - Restaurant ID: " + getRestaurantNit();
+		for (int c = 0; c < productList.size(); c++) {
+			if ((c+1) == productList.size()) {
+				msg += productList.get(c);
+			} else {
+				msg += productList.get(c) + ",";
+			}
+		}
+		return msg;
+	}
+	
 	public String getListProductsToExport() {
 		String msg = "";
 		for (int c = 0; c < productList.size(); c++) {

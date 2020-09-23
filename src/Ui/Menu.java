@@ -74,8 +74,8 @@ public class Menu {
 		switch (option) {
 			case 1: showRestaurants(); break;
 			case 2: showClients(); break;
-			case 3:  break;
-			case 4:  break;
+			case 3: showOrders(); break;
+			case 4: showProducts(); break;
 		}
 	}
 	
@@ -225,9 +225,11 @@ public class Menu {
 	}
 	
 	private void registerNewOrder() throws IOException {
+		showRestaurants();
 		bw.write("Enter the restaurant code: ");
 		bw.flush();
 		String cr = br.readLine();
+		showClients();
 		bw.write("Enter the client code: ");
 		bw.flush();
 		String cc = br.readLine();
@@ -282,6 +284,16 @@ public class Menu {
 	
 	private void showClients() throws IOException {
 		bw.write(index.getDescriptionAllClients());
+		bw.flush();
+	}
+	
+	private void showOrders() throws IOException {
+		bw.write(index.getDescriptionAllOrders());
+		bw.flush();
+	}
+	
+	private void showProducts() throws IOException {
+		bw.write(index.getDescriptionAllProducts());
 		bw.flush();
 	}
 	

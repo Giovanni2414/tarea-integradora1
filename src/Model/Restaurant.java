@@ -14,9 +14,7 @@ public class Restaurant implements Comparable<Restaurant> {
 	
 	public String toString() {
 		String message = "-------------------\n";
-		message += "Name:" + getName() + "\n";
-		message += "Name admin:" + getNameAdmin() + "\n";
-		message += "Nit:" + getNit() + "\n";
+		message += "Name:" + getName() + " - Name admin: " + getNameAdmin() + " - Nit: " + getNit() + "\n";
 		return message;
 	}
 	

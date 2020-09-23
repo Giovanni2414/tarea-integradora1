@@ -43,10 +43,7 @@ public class Client {
 	
 	public String toString() {
 		String message = "-------------------\n";
-		message += "Name:" + getName() + "\n";
-		message += "Id type: " + getIdentificationType() + "\n";
-		message += "Id number:" + getIdentificationNumber() + "\n";
-		message += "Phone:" + getPhone() + "\n";
+		message += "Name:" + getName() + " - Type: " + getIdentificationType() + " - Id:" + getIdentificationNumber() + " - Phone:" + getPhone() + " - ";
 		message += "Address:" + getAddress() + "\n";
 		return message;
 	}
