@@ -1,7 +1,10 @@
 package Model;
 
-public class Client {
+import java.io.Serializable;
+
+public class Client implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private final int CEDULA = 1;
 	private final int TARJETA_IDENTIDAD = 2;
 	private final int PASSPORT = 3;
@@ -43,7 +46,7 @@ public class Client {
 	
 	public String toString() {
 		String message = "-------------------\n";
-		message += "Name:" + getName() + " - Type: " + getIdentificationType() + " - Id:" + getIdentificationNumber() + " - Phone:" + getPhone() + " - ";
+		message += "Name:" + getName() + " - Type:" + getIdentificationType() + " - Code:" + getIdentificationNumber() + " - Phone:" + getPhone() + " - ";
 		message += "Address:" + getAddress() + "\n";
 		return message;
 	}

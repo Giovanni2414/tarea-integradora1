@@ -1,10 +1,12 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class Order {
+public class Order implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private String code;
 	private String dateOrder;
 	private String clientCode;

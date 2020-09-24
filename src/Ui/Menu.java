@@ -4,7 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+
+import CustomExceptions.ClientDontExistException;
 import CustomExceptions.InvalidOptionException;
+import CustomExceptions.RestaurantDontExistException;
+
 import java.io.BufferedWriter;
 import Model.Software;
 
@@ -20,7 +24,7 @@ public class Menu {
 		bw = new BufferedWriter(new OutputStreamWriter(System.out));
 	}
 	
-	public void startMenu() throws NumberFormatException, IOException, InvalidOptionException {
+	public void startMenu() throws NumberFormatException, IOException, InvalidOptionException, RestaurantDontExistException, ClientDontExistException, ClassNotFoundException {
 		final int EXIT_OPTION = 0;
 		int option = 9999;
 		do {
@@ -41,8 +45,8 @@ public class Menu {
 				case 3: registerProduct(); break;
 				case 4: registerNewOrder(); break;
 				case 5: showDataMenu(); break;
-				case 6: exportDataMenu(); break;
-				case 7: importDataMenu(); break;
+				case 6: saveDataMenu(); break;
+				case 7: loadDataMenu(); break;
 				case 8: editDataMenu(); break;
 				default: 
 					bw.write("Error, Enter a valid option");
@@ -52,42 +56,81 @@ public class Menu {
 		} while (option != EXIT_OPTION);
 	}
 	
-	private void editDataMenu() throws IOException {
-		String msg = "\nEnter an option";
-		msg += "(1) Edit restaurant information";
-		msg += "(2) Edit client information";
-		msg += "(3) Edit product information";
+	private void editDataMenu() throws IOException, RestaurantDontExistException, ClientDontExistException {
+		String msg = "\nEnter an option\n";
+		msg += "(1) Edit restaurant information\n";
+		msg += "(2) Edit client information\n";
+		msg += "(3) Edit product information\n";
 		msg += "(4) Edit order information\nOption: ";
 		bw.write(msg);
 		bw.flush();
 		int option = Integer.parseInt(br.readLine());
 		switch (option) {
-			case 1: break;
-			case 2: break;
+			case 1: editRestaurant(); break;
+			case 2: editClient(); break;
 			case 3: break;
 			case 4: break;
 		}
 	}
 	
-	private void exportDataMenu() throws IOException {
+	private void editClient() throws IOException, ClientDontExistException {
+		try {
+			bw.write(index.getDescriptionAllClients() + "Enter a client code to edit\nCode: ");
+			bw.flush();
+			String code = br.readLine();
+			index.verifyClient(code);
+			bw.write("Enter an option\n(1) Edit type identity\n(2) Edit Name\n(3) Edit phone\n(4) Edit address\n(5) Edit identity number\nOption:  ");
+			bw.flush();
+			int option = Integer.parseInt(br.readLine());
+			switch (option) {
+				case 1: 
+					bw.write("Select:\n(1) Cedula\n(2) Card identity\n(3) Passport\n");
+					bw.flush();
+					break;
+				default: break;
+			}
+			bw.write("Enter the new data: ");
+			bw.flush();
+			String data = br.readLine();
+			bw.write(index.editClientData(code, option, data));
+			bw.flush();
+		} catch (ClientDontExistException e) {
+			bw.write(e.getMessage());
+			bw.flush();
+		}
+	}
+	
+	private void editRestaurant() throws IOException, RestaurantDontExistException {
+		bw.write(index.getDescriptionAllRestaurants() + "Enter a restaurant code to edit\nCode: ");
+		bw.flush();
+		String code = br.readLine();
+		bw.write("Enter an option\n(1) Edit name\n(2) Edit NIT\n(3) Edit Admin name\nOption: ");
+		bw.flush();
+		int option = Integer.parseInt(br.readLine());
+		bw.write("Enter the new data: ");
+		bw.flush();
+		String data = br.readLine();
+		bw.write(index.editRestaurantData(code, option, data));
+		bw.flush();
+	}
+	
+	private void saveDataMenu() throws IOException {
 		String message = "\nEnter an option\n";
 		message += "(0) Exit menu\n";
-		message += "(1) Export restaurant data\n";
-		message += "(2) Export products data\n";
-		message += "(3) Export clients data\n";
-		message += "(4) Export orders data\nOption: ";
+		message += "(1) Save restaurant data\n";
+		message += "(2) Save clients data\n";
+		message += "(3) Save products data\n";
+		message += "(4) Save orders data\nOption: ";
 		bw.write(message);
 		bw.flush();
 		int option = Integer.parseInt(br.readLine());
-		bw.write("File name to export data (Do not put the extension, that archive will be a .csv): ");
-		bw.flush();
-		String nameFile = br.readLine();
 		switch (option) {
-			case 1: index.exportRestaurantData(nameFile); break;
-			case 2: index.exportProductData(nameFile); break;
-			case 3: index.exportClientData(nameFile); break;
-			case 4: index.exportOrderData(nameFile); break;
+			case 1: bw.write(index.saveData(1)); break;
+			case 2: bw.write(index.saveData(3)); break;
+			case 3: bw.write(index.saveData(2)); break;
+			case 4: bw.write(index.saveData(4)); break;
 		}
+		bw.flush();
 	}
 	
 	private void showDataMenu() throws IOException {
@@ -109,26 +152,21 @@ public class Menu {
 		bw.flush();
 	}
 	
-	private void importDataMenu() throws IOException, NumberFormatException, InvalidOptionException {
+	private void loadDataMenu() throws IOException, NumberFormatException, InvalidOptionException, ClassNotFoundException {
 		String message = "\nEnter an option\n";
 		message += "(0) Exit menu\n";
-		message += "(1) Import restaurant data\n";
-		message += "(2) Import clients data\n";
-		message += "(3) Import products data\n";
-		message += "(4) Import orders data\n";
+		message += "(1) Load restaurants data\n";
+		message += "(2) Load clients data\n";
+		message += "(3) Load products data\n";
+		message += "(4) Load orders data\nOption: ";
 		bw.write(message);
 		bw.flush();
-		bw.write("Option: ");
-		bw.flush();
 		int option = Integer.parseInt(br.readLine());
-		bw.write("File name to export data (Do not put the extension, that archive will be a .csv): ");
-		bw.flush();
-		String nameFile = br.readLine();
 		switch (option) {
-			case 1: index.importRestaurantData(nameFile); break;
-			case 2: index.importClientData(nameFile); break;
-			case 3: index.importProductData(nameFile); break;
-			case 4: break;
+			case 1: bw.write(index.loadData(1)); break;
+			case 2: bw.write(index.loadData(2)); break;
+			case 3: bw.write(index.loadData(3)); break;
+			case 4: bw.write(index.loadData(4)); break;
 		}
 	}
 	
@@ -140,8 +178,8 @@ public class Menu {
 		message += "(3) Register a new Product\n";
 		message += "(4) Register a new Order\n";
 		message += "(5) Show information\n";
-		message += "(6) Export data\n";
-		message += "(7) Import data\n";
+		message += "(6) Save data\n";
+		message += "(7) Load data\n";
 		message += "(8) Edit data\n";
 		return message;
 	}

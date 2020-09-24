@@ -1,6 +1,10 @@
 package Model;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	private String code;
 	private String name;
 	private String description;
@@ -17,7 +21,7 @@ public class Product {
 	@Override
 	public String toString() {
 		String msg = "-------------------";
-		msg += "Code:" + getCode() + " - Name:" + getName() + " - Description:" + getDescription() + " - Price:" + getPrice() + "-Restaurant ID: " + getRestaurantNit();
+		msg += "Code:" + getCode() + " - Name:" + getName() + " - Description:" + getDescription() + " - Price:" + getPrice() + "-Restaurant Code:" + getRestaurantNit();
 		return msg;
 	}
 	

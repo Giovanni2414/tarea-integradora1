@@ -1,9 +1,12 @@
 package Model;
 
-import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,10 +19,10 @@ import CustomExceptions.InvalidOptionException;
 
 public class Software {
 	
-	private ArrayList<Restaurant> restaurants;
-	private ArrayList<Product> products;
+	private List<Restaurant> restaurants;
+	private List<Product> products;
 	private List<Client> clients;
-	private ArrayList<Order> orders;
+	private List<Order> orders;
 	
 	public Software() {
 		restaurants = new ArrayList<>();
@@ -96,6 +99,59 @@ public class Software {
 			message = e.getMessage();
 		}
 		return message;
+	}
+	
+	public String editRestaurantData(String code, int option, String data) {
+		String msg = "Restaurant and derivated products has been updated";
+			for (int c = 0; c < restaurants.size(); c++) {
+				if ((restaurants.get(c).getNit()).equals(code)) {
+					switch (option) {
+						case 1: (restaurants.get(c)).setName(data); break;
+						case 2: (restaurants.get(c)).setNameAdmin(data); break;
+						case 3: (restaurants.get(c)).setNit(data); 
+							for (int i = 0; i < products.size(); i++) {
+								if ((products.get(i).getRestaurantNit()).equals(code)) {
+									products.get(i).setRestaurantNit(data);
+								}
+							}
+							break;
+					}
+				}
+			}
+		return msg;
+	}
+	
+	public String editClientData(String code, int option, String data) {
+		for (int c = 0; c < clients.size(); c++) {
+			if ((clients.get(c).getIdentificationNumber()).equals(code)) {
+				switch (option) {
+					case 1: clients.get(c).setIdentificationType(Integer.parseInt(data)); break;
+					case 2: clients.get(c).setName(data); break;
+					case 3: clients.get(c).setPhone(data); break;
+					case 4: clients.get(c).setAddress(data); break;
+					case 5: clients.get(c).setIdentificationNumber(data); break;
+				}
+				//Bubble sort algorithm
+				int n = clients.size();
+				for (int i = 0; i < n - 1; i++) {
+					for (int j = 0; j < n - i - 1; j++) {
+						int res = 0;
+						String[] name1S = clients.get(j).getName().split(" ");
+						String[] name2S = clients.get(j + 1).getName().split(" ");
+						res = String.valueOf(name1S[0].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[0].charAt(0)));
+						if (res == 0) {
+							res = String.valueOf(name1S[1].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[1].charAt(0)));
+						}
+						if (res >= 1) {
+							Client temp = clients.get(j);
+							clients.set(j, clients.get(j + 1));
+							clients.set(j + 1, temp);
+						}
+					}
+				}
+			}
+		}
+		return "Client data has been updated";
 	}
 	
 	public String addProductToListOrder(String cr, String cp, String orderC) {
@@ -218,7 +274,7 @@ public class Software {
 	}
 	
 	public String exportRestaurantData(String fileName) throws FileNotFoundException {
-		String message = "Data was exported successfully";
+		String message = "Clients data saved successfully";
 		PrintWriter pw = new PrintWriter("data/" + fileName + ".csv");
 
 	    for(int i=0;i<restaurants.size();i++){
@@ -230,82 +286,86 @@ public class Software {
 		return message;
 	}
 	
-	public String exportClientData(String fileName) throws FileNotFoundException {
-		String message = "Data was exported successfully";
-		PrintWriter pw = new PrintWriter("data/" + fileName + ".csv");
-
-	    for(int i=0;i<clients.size();i++){
-	      Client myClient = clients.get(i);
-	      pw.println(myClient.getName()+","+myClient.getIdentificationTypeForExport()+","+myClient.getIdentificationNumber()+","+myClient.getPhone()+","+myClient.getAddress());
-	    }
-
-	    pw.close();
-		return message;
+	public String saveData(int objectSave) throws IOException {
+		String msg = "";
+		try {
+			ObjectOutputStream oos;
+			switch (objectSave) {
+				case 1:
+					oos = new ObjectOutputStream(new FileOutputStream("data/restaurants.tr1"));
+				    oos.writeObject(restaurants);
+				    oos.close();
+					break;
+				case 2:
+					oos = new ObjectOutputStream(new FileOutputStream("data/products.tr1"));
+				    oos.writeObject(products);
+				    oos.close();
+					break;
+				case 3:
+					oos = new ObjectOutputStream(new FileOutputStream("data/clients.tr1"));
+				    oos.writeObject(clients);
+				    oos.close();
+					break;
+				case 4:
+					oos = new ObjectOutputStream(new FileOutputStream("data/orders.tr1"));
+				    oos.writeObject(orders);
+				    oos.close();
+					break;
+			}
+		} catch (IOException e) {
+			msg = e.getMessage();
+		}
+		return msg;
 	}
-	
-	public String exportProductData(String fileName) throws FileNotFoundException {
-		String message = "Data was exported successfully";
-		PrintWriter pw = new PrintWriter("data/" + fileName + ".csv");
 
-	    for(int i=0;i<products.size();i++){
-	      Product myProduct = products.get(i);
-	      pw.println(myProduct.getName()+","+myProduct.getPrice()+","+myProduct.getCode()+","+myProduct.getDescription()+","+myProduct.getRestaurantNit());
-	    }
-
-	    pw.close();
-		return message;
-	}
-	
-	public String exportOrderData(String fileName) throws FileNotFoundException {
-		String message = "Data was exported successfully";
-		PrintWriter pw = new PrintWriter("data/" + fileName + ".csv");
-
-	    for(int i=0;i<orders.size();i++){
-	      Order myOrder = orders.get(i);
-	      pw.println(myOrder.getClientCode()+","+myOrder.getCode()+","+myOrder.getRestaurantNit()+","+myOrder.getDateOrder()+","+myOrder.getListProductsToExport());
-	    }
-
-	    pw.close();
-		return message;
-	}
-	
-	public String importRestaurantData(String fileName) throws IOException {
-		String msg = "Data was imported succesfully";
-	    BufferedReader br = new BufferedReader(new FileReader("data/" + fileName + ".csv"));
-	    String line = br.readLine();
-	    while(line!=null){
-	      String[] parts = line.split(",");
-	      addRestaurant(parts[0], parts[1], parts[2]);
-	      line = br.readLine();
-	    }
-	    br.close();
-	    return msg;
-	}
-	
-	public String importClientData(String fileName) throws IOException, NumberFormatException, InvalidOptionException {
-		String msg = "Data was imported succesfully";
-	    BufferedReader br = new BufferedReader(new FileReader("data/" + fileName + ".csv"));
-	    String line = br.readLine();
-	    while(line!=null){
-	      String[] parts = line.split(",");
-	      addClient(Integer.parseInt(parts[1]), parts[2], parts[0], parts[3], parts[4]);
-	      line = br.readLine();
-	    }
-	    br.close();
-	    return msg;
-	}
-	
-	public String importProductData(String fileName) throws IOException, NumberFormatException, InvalidOptionException {
-		String msg = "Data was imported succesfully";
-	    BufferedReader br = new BufferedReader(new FileReader("data/" + fileName + ".csv"));
-	    String line = br.readLine();
-	    while(line!=null){
-	      String[] parts = line.split(",");
-	      addProduct(parts[2], parts[0], parts[3], Double.parseDouble(parts[1]), parts[4]);
-	      line = br.readLine();
-	    }
-	    br.close();
-	    return msg;
+	public String loadData(int objectLoad) throws IOException, ClassNotFoundException {
+		String msg = "";
+		try {
+			File file;
+			switch (objectLoad) {
+				case 1:
+					file = new File("data/restaurants.tr1");
+					if(file.exists()){
+						ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+					    restaurants = (List)ois.readObject();
+					    ois.close();
+					    msg = "Restaurants data has been loaded succesfully";
+					}
+					break;
+				case 2:
+					file = new File("data/clients.tr1");
+					if(file.exists()){
+						ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+					    clients = (List)ois.readObject();
+					    ois.close();
+					    msg = "Clients data has been loaded succesfully";
+					}
+					break;
+				case 3:
+					file = new File("data/products.tr1");
+					if(file.exists()){
+						ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+					    products = (List)ois.readObject();
+					    ois.close();
+					    msg = "Products data has been loaded succesfully";
+					}
+					break;
+				case 4:
+					file = new File("data/orders.tr1");
+					if(file.exists()){
+						ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+					    orders = (List)ois.readObject();
+					    ois.close();
+					    msg = "Orders data has been loaded succesfully";
+					}
+					break;
+			}
+		} catch (IOException e) {
+			msg = e.getMessage();
+		} catch (ClassNotFoundException e) {
+			msg = e.getMessage();
+		}
+		return msg;
 	}
 	
 }
