@@ -35,7 +35,7 @@ public class Menu {
 				bw.flush();
 			}
 			switch (option) {
-				case 0: exitProgram(); break;
+				case 0: bw.write("Good bye!"); bw.flush(); break;
 				case 1: registerRestaurant(); break;
 				case 2: registerClient(); break;
 				case 3: registerProduct(); break;
@@ -43,6 +43,7 @@ public class Menu {
 				case 5: showDataMenu(); break;
 				case 6: exportDataMenu(); break;
 				case 7: importDataMenu(); break;
+				case 8: editDataMenu(); break;
 				default: 
 					bw.write("Error, Enter a valid option");
 					bw.flush();
@@ -51,99 +52,84 @@ public class Menu {
 		} while (option != EXIT_OPTION);
 	}
 	
-	private void exportDataMenu() throws IOException {
-		bw.write(getExportMenuMessage());
-		bw.flush();
-		bw.write("Option: ");
+	private void editDataMenu() throws IOException {
+		String msg = "\nEnter an option";
+		msg += "(1) Edit restaurant information";
+		msg += "(2) Edit client information";
+		msg += "(3) Edit product information";
+		msg += "(4) Edit order information\nOption: ";
+		bw.write(msg);
 		bw.flush();
 		int option = Integer.parseInt(br.readLine());
 		switch (option) {
-			case 1: exportRestaurantData(); break;
-			case 2: exportProductData(); break;
-			case 3: exportClientData(); break;
-			case 4: exportOrderData(); break;
+			case 1: break;
+			case 2: break;
+			case 3: break;
+			case 4: break;
+		}
+	}
+	
+	private void exportDataMenu() throws IOException {
+		String message = "\nEnter an option\n";
+		message += "(0) Exit menu\n";
+		message += "(1) Export restaurant data\n";
+		message += "(2) Export products data\n";
+		message += "(3) Export clients data\n";
+		message += "(4) Export orders data\nOption: ";
+		bw.write(message);
+		bw.flush();
+		int option = Integer.parseInt(br.readLine());
+		bw.write("File name to export data (Do not put the extension, that archive will be a .csv): ");
+		bw.flush();
+		String nameFile = br.readLine();
+		switch (option) {
+			case 1: index.exportRestaurantData(nameFile); break;
+			case 2: index.exportProductData(nameFile); break;
+			case 3: index.exportClientData(nameFile); break;
+			case 4: index.exportOrderData(nameFile); break;
 		}
 	}
 	
 	private void showDataMenu() throws IOException {
-		bw.write(getInformationMenuMessage());
-		bw.flush();
-		bw.write("Option: ");
+		String message = "\nEnter an option\n";
+		message += "(0) Exit menu\n";
+		message += "(1) Show restaurants data\n";
+		message += "(2) Show clients data\n";
+		message += "(3) Show products data\n";
+		message += "(4) Show orders data\nOption: ";
+		bw.write(message);
 		bw.flush();
 		int option = Integer.parseInt(br.readLine());
 		switch (option) {
-			case 1: showRestaurants(); break;
-			case 2: showClients(); break;
-			case 3: showOrders(); break;
-			case 4: showProducts(); break;
+			case 1: bw.write(index.getDescriptionAllRestaurants()); break;
+			case 2: bw.write(index.getDescriptionAllClients()); break;
+			case 3: bw.write(index.getDescriptionAllProducts()); break;
+			case 4: bw.write(index.getDescriptionAllOrders()); break;
 		}
+		bw.flush();
 	}
 	
 	private void importDataMenu() throws IOException, NumberFormatException, InvalidOptionException {
-		bw.write(getImportMenuMessage());
+		String message = "\nEnter an option\n";
+		message += "(0) Exit menu\n";
+		message += "(1) Import restaurant data\n";
+		message += "(2) Import clients data\n";
+		message += "(3) Import products data\n";
+		message += "(4) Import orders data\n";
+		bw.write(message);
 		bw.flush();
 		bw.write("Option: ");
 		bw.flush();
 		int option = Integer.parseInt(br.readLine());
+		bw.write("File name to export data (Do not put the extension, that archive will be a .csv): ");
+		bw.flush();
+		String nameFile = br.readLine();
 		switch (option) {
-			case 1: importRestaurantData(); break;
-			case 2: importClientData(); break;
-			case 3:  break;
-			case 4:  break;
+			case 1: index.importRestaurantData(nameFile); break;
+			case 2: index.importClientData(nameFile); break;
+			case 3: index.importProductData(nameFile); break;
+			case 4: break;
 		}
-	}
-	
-	private void exportRestaurantData() throws IOException {
-		bw.write("File name to export restaurant data (Do not put the extension, that archive will be a .csv): ");
-		bw.flush();
-		String nameFile = br.readLine();
-		bw.write(index.exportRestaurantData(nameFile));
-		bw.flush();
-	}
-	
-	private void exportProductData() throws IOException {
-		bw.write("File name to export products data (Do not put the extension, that archive will be a .csv): ");
-		bw.flush();
-		String nameFile = br.readLine();
-		bw.write(index.exportProductData(nameFile));
-		bw.flush();
-	}
-	
-	private void exportClientData() throws IOException {
-		bw.write("File name to export clients data (Do not put the extension, that archive will be a .csv): ");
-		bw.flush();
-		String nameFile = br.readLine();
-		bw.write(index.exportClientData(nameFile));
-		bw.flush();
-	}
-	
-	private void exportOrderData() throws IOException {
-		bw.write("File name to export orders data (Do not put the extension, that archive will be a .csv): ");
-		bw.flush();
-		String nameFile = br.readLine();
-		bw.write(index.exportOrderData(nameFile));
-		bw.flush();
-	}
-	
-	private void importRestaurantData() throws IOException {
-		bw.write("File name to import restaurants data (Do not put the extension, that archive will be a .csv): ");
-		bw.flush();
-		String nameFile = br.readLine();
-		bw.write(index.importRestaurantData(nameFile));
-		bw.flush();
-	}
-	
-	private void importClientData() throws IOException, NumberFormatException, InvalidOptionException {
-		bw.write("File name to import restaurants data (Do not put the extension, that archive will be a .csv): ");
-		bw.flush();
-		String nameFile = br.readLine();
-		bw.write(index.importClientData(nameFile));
-		bw.flush();
-	}
-	
-	private void exitProgram() throws IOException {
-		bw.write("Good bye!");
-		bw.flush();
 	}
 	
 	private String getMenuMessage() {
@@ -156,36 +142,7 @@ public class Menu {
 		message += "(5) Show information\n";
 		message += "(6) Export data\n";
 		message += "(7) Import data\n";
-		return message;
-	}
-	
-	private String getExportMenuMessage() {
-		String message = "\nEnter an option\n";
-		message += "(0) Exit menu\n";
-		message += "(1) Export restaurant data\n";
-		message += "(2) Export products data\n";
-		message += "(3) Export clients data\n";
-		message += "(4) Export orders data\n";
-		return message;
-	}
-	
-	private String getImportMenuMessage() {
-		String message = "\nEnter an option\n";
-		message += "(0) Exit menu\n";
-		message += "(1) Import restaurant data\n";
-		message += "(2) Import clients data\n";
-		message += "(3) Import products data\n";
-		message += "(4) Import orders data\n";
-		return message;
-	}
-	
-	private String getInformationMenuMessage() {
-		String message = "\nEnter an option\n";
-		message += "(0) Exit menu\n";
-		message += "(1) Show restaurants data\n";
-		message += "(2) Show clients data\n";
-		message += "(3) Show products data\n";
-		message += "(4) Show orders data\n";
+		message += "(8) Edit data\n";
 		return message;
 	}
 	
@@ -225,12 +182,10 @@ public class Menu {
 	}
 	
 	private void registerNewOrder() throws IOException {
-		showRestaurants();
-		bw.write("Enter the restaurant code: ");
+		bw.write(index.getDescriptionAllRestaurants() + "Enter the restaurant code: ");
 		bw.flush();
 		String cr = br.readLine();
-		showClients();
-		bw.write("Enter the client code: ");
+		bw.write(index.getDescriptionAllClients() + "Enter the client code: ");
 		bw.flush();
 		String cc = br.readLine();
 		String messageResponse = index.addOrder(cc, cr);
@@ -274,26 +229,6 @@ public class Menu {
 		bw.flush();
 		String rc = br.readLine();
 		bw.write(index.addProduct(pc, pn, pd, pp, rc));
-		bw.flush();
-	}
-	
-	private void showRestaurants() throws IOException {
-		bw.write(index.getDescriptionAllRestaurants());
-		bw.flush();
-	}
-	
-	private void showClients() throws IOException {
-		bw.write(index.getDescriptionAllClients());
-		bw.flush();
-	}
-	
-	private void showOrders() throws IOException {
-		bw.write(index.getDescriptionAllOrders());
-		bw.flush();
-	}
-	
-	private void showProducts() throws IOException {
-		bw.write(index.getDescriptionAllProducts());
 		bw.flush();
 	}
 	
