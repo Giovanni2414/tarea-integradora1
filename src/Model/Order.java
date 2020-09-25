@@ -37,6 +37,7 @@ public class Order implements Serializable {
 			} else {
 				msg += productList.get(c) + " x " + quantities.get(c) + ",";
 			}
+			msg += "\n";
 		}
 		return msg;
 	}

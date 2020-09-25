@@ -322,10 +322,10 @@ public class Menu {
 			bw.flush();
 			boolean repeat = false;
 			do {
-				bw.write(index.getDescriptionSelectedProducts(cr) + "Enter a product code to add, the product must be of the restaurant code\n");
+				bw.write(index.getDescriptionSelectedProducts(cr) + "Enter a product code to add, the product must be of the restaurant code: ");
 				bw.flush();
 				String cpa = br.readLine();
-				bw.write("Enter the quantity to buy");
+				bw.write("Enter the quantity to buy: ");
 				bw.flush();
 				int quantity = Integer.parseInt(br.readLine());
 				bw.write(index.addProductToListOrder(cr, cpa, codeOrder, quantity) + "You want add one more product?\n(1) Yes\n(2) No\n");
@@ -338,10 +338,12 @@ public class Menu {
 				}
 			} while (repeat);
 		}
+		bw.write("Order finished successfully");
+		bw.flush();
 	}
 	
 	private void registerProduct() throws IOException {
-		bw.write("Enter the product code: ");
+		bw.write(index.getDescriptionAllRestaurants() + "Enter the product code: ");
 		bw.flush();
 		String pc = br.readLine();
 		bw.write("Enter the product name: ");
@@ -366,6 +368,7 @@ public class Menu {
 		String separator = br.readLine();
 		bw.write("Enter the name for the CSV file (do not put the extension, it will put itself): ");
 		bw.flush();
+		bw.write("Please, be patient, we are creating for you a beautiful report :) ...\n");
 		String fileName = br.readLine();
 		String response = index.createReportCSVOrders(fileName, separator);
 		bw.write(response);

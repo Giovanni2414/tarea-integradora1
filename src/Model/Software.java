@@ -453,6 +453,8 @@ public class Software {
 					    restaurants = (List)ois.readObject();
 					    ois.close();
 					    msg = "Restaurants data has been loaded succesfully\n";
+					}  else {
+						msg = "Restaurants can't be loaded, file with restaurants don't exists\n";
 					}
 					break;
 				case 2:
@@ -462,6 +464,8 @@ public class Software {
 					    clients = (List)ois.readObject();
 					    ois.close();
 					    msg = "Clients data has been loaded succesfully\n";
+					}  else {
+						msg = "Clients can't be loaded, file with clients don't exists\n";
 					}
 					break;
 				case 3:
@@ -471,6 +475,8 @@ public class Software {
 					    products = (List)ois.readObject();
 					    ois.close();
 					    msg = "Products data has been loaded succesfully\n";
+					}  else {
+						msg = "Products can't be loaded, file with products don't exists\n";
 					}
 					break;
 				case 4:
@@ -480,6 +486,8 @@ public class Software {
 					    orders = (List) ois.readObject();
 					    ois.close();
 					    msg = "Orders data has been loaded succesfully\n";
+					}  else {
+						msg = "Orders can't be loaded, file with orders don't exists\n";
 					}
 					break;
 			}
@@ -625,7 +633,7 @@ public class Software {
 		      for (int b = 0; b < myOrder2.size(); b++) {
 		    	  for (int v = 0; v < products.size(); v++) {
 		    		  if ((myOrder2.get(b)).equals(products.get(v).getCode())) {
-		    			  orderProducts += (products.get(v).getName()) + "x" + myOrderQuantities.get(b) + " : ";
+		    			  orderProducts += (products.get(v).getName()) + " x " + myOrderQuantities.get(b) + ":";
 		    		  }
 		    	  }
 		      }
@@ -633,8 +641,9 @@ public class Software {
 		      objectReport.add(new objectReportCSV(myRestaurant.getName(), myRestaurant.getNameAdmin(),myRestaurant.getNit(),myClient.getName(),myClient.getPhone(),myClient.getAddress(),myClient.getIdentificationType(),myClient.getIdentificationNumber(), orderProducts, myOrder.getDateOrder()));
 		    }
 		    Collections.sort(objectReport);
+		    pw.println("Name Restaurant" + separator + "Name restaurant admin" + separator + "Restaurant nit" + separator + "Client name" + separator + "Client phone" + separator + "Client address" + separator + "Client type identification" + separator + "Client identification number" + separator + "Product names x quantity" + separator + "Date order");
 		    for (int c = 0; c < objectReport.size(); c++) {
-		    	pw.write(objectReport.get(c).name + separator + objectReport.get(c).nameadmin + separator + objectReport.get(c).rnit + separator + objectReport.get(c).cname + separator + objectReport.get(c).cphone + separator + objectReport.get(c).caddress + separator + objectReport.get(c).ciden + separator + objectReport.get(c).cidennumber + separator + objectReport.get(c).orderProducts + separator + objectReport.get(c).date);
+		    	pw.println(objectReport.get(c).name + separator + objectReport.get(c).nameadmin + separator + objectReport.get(c).rnit + separator + objectReport.get(c).cname + separator + objectReport.get(c).cphone + separator + objectReport.get(c).caddress + separator + objectReport.get(c).ciden + separator + objectReport.get(c).cidennumber + separator + objectReport.get(c).orderProducts + separator + objectReport.get(c).date);
 		    }
 		    pw.close();
 		} catch (FileNotFoundException e) {
