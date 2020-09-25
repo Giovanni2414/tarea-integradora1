@@ -59,6 +59,10 @@ public class Order implements Serializable {
 	}
 	
 	/** Getters and Setters */
+	public String getStatusString() {
+		return status;
+	}
+	
 	public int getStatus() {
 		int res = 0;
 		if (status.equals("Solicited")) {

@@ -52,6 +52,7 @@ public class Menu {
 				case 8: editDataMenu(); break;
 				case 9: importCSVMenu(); break;
 				case 10: sortedDataMenu(); break;
+				case 11: generateCSVOrdersReport(); break;
 				default: 
 					bw.write("Error, Enter a valid option");
 					bw.flush();
@@ -72,7 +73,7 @@ public class Menu {
 		bw.flush();
 	}
 	
-	private void editDataMenu() throws IOException, RestaurantDontExistException, ClientDontExistException, ProductDontExistException, OrderDontExistException {
+	private void editDataMenu() throws IOException, RestaurantDontExistException, ClientDontExistException, ProductDontExistException, OrderDontExistException, NumberFormatException, InvalidOptionException {
 		String msg = "\nEnter an option\n";
 		msg += "(1) Edit restaurant information\n";
 		msg += "(2) Edit client information\n";
@@ -321,7 +322,7 @@ public class Menu {
 			bw.flush();
 			boolean repeat = false;
 			do {
-				bw.write("Enter a product code to add, the product must be of the restaurant code\n");
+				bw.write(index.getDescriptionSelectedProducts(cr) + "Enter a product code to add, the product must be of the restaurant code\n");
 				bw.flush();
 				String cpa = br.readLine();
 				bw.write(index.addProductToListOrder(cr, cpa, codeOrder) + "You want add one more product?\n(1) Yes\n(2) No\n");
@@ -354,6 +355,10 @@ public class Menu {
 		String rc = br.readLine();
 		bw.write(index.addProduct(pc, pn, pd, pp, rc));
 		bw.flush();
+	}
+	
+	private void generateCSVOrdersReport() {
+		
 	}
 	
 }

@@ -26,7 +26,7 @@ import CustomExceptions.ProductDontExistException;
 
 public class Software {
 	
-	private List<Restaurant> restaurants;
+	public List<Restaurant> restaurants;
 	private List<Product> products;
 	private List<Client> clients;
 	private List<Order> orders;
@@ -148,6 +148,26 @@ public class Software {
 		return msg;
 	}
 	
+	public void bubbleSortClients() {
+		int n = clients.size();
+		for (int i = 0; i < n - 1; i++) {
+			for (int j = 0; j < n - i - 1; j++) {
+				int res = 0;
+				String[] name1S = clients.get(j).getName().split(" ");
+				String[] name2S = clients.get(j + 1).getName().split(" ");
+				res = String.valueOf(name1S[0].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[0].charAt(0)));
+				if (res == 0) {
+					res = String.valueOf(name1S[1].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[1].charAt(0)));
+				}
+				if (res >= 1) {
+					Client temp = clients.get(j);
+					clients.set(j, clients.get(j + 1));
+					clients.set(j + 1, temp);
+				}
+			}
+		}
+	}
+	
 	public String editClientData(String code, int option, String data) {
 		String msg = "Client data has been updated";
 		try {
@@ -162,23 +182,8 @@ public class Software {
 						case 5: clients.get(c).setIdentificationNumber(data); break;
 					}
 					//Bubble sort algorithm
-					int n = clients.size();
-					for (int i = 0; i < n - 1; i++) {
-						for (int j = 0; j < n - i - 1; j++) {
-							int res = 0;
-							String[] name1S = clients.get(j).getName().split(" ");
-							String[] name2S = clients.get(j + 1).getName().split(" ");
-							res = String.valueOf(name1S[0].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[0].charAt(0)));
-							if (res == 0) {
-								res = String.valueOf(name1S[1].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[1].charAt(0)));
-							}
-							if (res >= 1) {
-								Client temp = clients.get(j);
-								clients.set(j, clients.get(j + 1));
-								clients.set(j + 1, temp);
-							}
-						}
-					}
+					bubbleSortClients();
+					break;
 				}
 			}
 		} catch (ClientDontExistException e) {
@@ -363,6 +368,18 @@ public class Software {
 		return message;
 	}
 	
+	public String getDescriptionSelectedProducts(String restaurantNit) {
+		String message = "\n-------------------\n";
+		message += "    Products    \n";
+		for (int c = 0; c < products.size(); c++) {
+			if ((products.get(c).getRestaurantNit()).equals(restaurantNit)) {
+				message += products.get(c);
+			}
+		}
+		message += "-------------------\n";
+		return message;
+	}
+	
 	public String getDescriptionAllOrders() {
 		String message = "\n-------------------\n";
 		message += "    Orders    \n";
@@ -536,6 +553,19 @@ public class Software {
 			message += arrayCopy.get(c1);
 		}
 		message += "-------------------\n";
+		return message;
+	}
+	
+	public String exportOrderData(String fileName, String separator) throws FileNotFoundException {
+		String message = "Data was exported successfully";
+		PrintWriter pw = new PrintWriter("reports/" + fileName + ".csv");
+
+	    for(int i=0;i<orders.size();i++){
+	      Order myOrder = orders.get(i);
+	      pw.println(myOrder.getClientCode()+","+myOrder.getCode()+","+myOrder.getRestaurantNit()+","+myOrder.getDateOrder()+","+myOrder.getListProductsToExport());
+	    }
+
+	    pw.close();
 		return message;
 	}
 	
