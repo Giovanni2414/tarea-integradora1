@@ -2,16 +2,17 @@ package Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 
 public class Order implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private String code;
-	private String dateOrder;
+	private Date dateOrder;
 	private String clientCode;
 	private String restaurantNit;
 	private ArrayList<String> productList;
+	private ArrayList<Integer> quantities;
 	private String status;
 	
 	public Order (String clientCode, String restaurantNit) {
@@ -22,10 +23,8 @@ public class Order implements Serializable {
 		this.clientCode = clientCode;
 		this.restaurantNit = restaurantNit;
 		productList = new ArrayList<>();
-		int day = Calendar.DATE;
-		int month = Calendar.MONTH;
-		int year = Calendar.YEAR;
-		dateOrder = String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
+		quantities = new ArrayList<>();
+		dateOrder = new Date();
 		status = "Solicited";
 	}
 	
@@ -34,12 +33,20 @@ public class Order implements Serializable {
 		String msg = "-------------------\nCode: " + getCode() + " - Date: " + getDateOrder() + " - Restaurant ID: " + getRestaurantNit() + "- Status: " + status + " - Codes of shopped products: ";
 		for (int c = 0; c < productList.size(); c++) {
 			if ((c+1) == productList.size()) {
-				msg += productList.get(c) + "\n";
+				msg += productList.get(c) + " x " + quantities.get(c);
 			} else {
-				msg += productList.get(c) + ",";
+				msg += productList.get(c) + " x " + quantities.get(c) + ",";
 			}
 		}
 		return msg;
+	}
+	
+	public void addQuantity(int q) {
+		quantities.add(q);
+	}
+	
+	public ArrayList<Integer> getQuantitiesList() {
+		return quantities;
 	}
 	
 	public String getListProductsToExport() {
@@ -89,7 +96,7 @@ public class Order implements Serializable {
 	public void setCode(String code) {
 		this.code = code;
 	}
-	public void setDate(String dateOrder) {
+	public void setDate(Date dateOrder) {
 		this.dateOrder = dateOrder;
 	}
 	public void setClientCode(String clientCode) {
@@ -105,7 +112,7 @@ public class Order implements Serializable {
 		return code;
 	}
 	public String getDateOrder() {
-		return dateOrder;
+		return dateOrder.toString();
 	}
 	public String getClientCode() {
 		return clientCode;

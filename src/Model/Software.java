@@ -235,13 +235,14 @@ public class Software {
 		}
 	}
 	
-	public String addProductToListOrder(String cr, String cp, String orderC) {
+	public String addProductToListOrder(String cr, String cp, String orderC, int quantity) {
 		String message = "The product can't be added at the order, the code of the restaurant or product is bad\n";
 		for (int i = 0; i < products.size(); i++) {
 			if ((products.get(i).getCode()).equalsIgnoreCase(cp) && (products.get(i).getRestaurantNit()).equalsIgnoreCase(cr)) {
 				for (int c = 0; c < orders.size(); c++) {
 					if (orderC.equalsIgnoreCase(orders.get(c).getCode())) {
 						orders.get(c).addProduct(cp);
+						orders.get(c).addQuantity(quantity);
 						message = "Product added successfully to the order\n";
 					}
 				}
@@ -556,16 +557,89 @@ public class Software {
 		return message;
 	}
 	
-	public String exportOrderData(String fileName, String separator) throws FileNotFoundException {
-		String message = "Data was exported successfully";
-		PrintWriter pw = new PrintWriter("reports/" + fileName + ".csv");
+	public class objectReportCSV implements Comparable<objectReportCSV> {
+		
+		String name;
+		String nameadmin;
+		String rnit;
+		String cname;
+		String cphone;
+		String caddress;
+		String ciden;
+		String cidennumber;
+		String orderProducts;
+		String date;
+		
+		public objectReportCSV (String name, String nameadmin, String rnit, String cname, String cphone, String caddress, String ciden, String cidennumber, String orderProducts, String date) {
+			this.name = name;
+			this.nameadmin = nameadmin;
+			this.rnit = rnit;
+			this.cname = cname;
+			this.cphone = cphone;
+			this.caddress = caddress;
+			this.ciden = ciden;
+			this.cidennumber = cidennumber;
+			this.orderProducts = orderProducts;
+			this.date = date;
+		}
 
-	    for(int i=0;i<orders.size();i++){
-	      Order myOrder = orders.get(i);
-	      pw.println(myOrder.getClientCode()+","+myOrder.getCode()+","+myOrder.getRestaurantNit()+","+myOrder.getDateOrder()+","+myOrder.getListProductsToExport());
-	    }
-
-	    pw.close();
+		@Override
+		public int compareTo(objectReportCSV b1) {
+			int res = 0;
+			if (rnit.compareToIgnoreCase((b1.rnit)) != 0) {
+				res = rnit.compareToIgnoreCase((b1.rnit));
+			} else if (rnit.compareToIgnoreCase((b1.rnit)) != 0) {
+				if (rnit.compareToIgnoreCase((b1.rnit)) > 1) {
+					res = -1;
+				} else {
+					res = 1;
+				}
+			}
+			return res;
+		}
+		
+	}
+	
+	public String createReportCSVOrders(String fileName, String separator) throws FileNotFoundException {
+		String message = "Report was created successfully in path reports/" + fileName + ".csv";
+		ArrayList<objectReportCSV> objectReport = new ArrayList<>();
+		try {
+			PrintWriter pw = new PrintWriter("reports/" + fileName + ".csv");
+		    for(int i=0;i<orders.size();i++){
+		      Order myOrder = orders.get(i);
+		      Restaurant myRestaurant = null;
+		      Client myClient = null;
+		      for (int c = 0; c < restaurants.size(); c++) {
+		    	  if ((restaurants.get(c).getNit()).equals(myOrder.getRestaurantNit())) {
+		    		  myRestaurant = restaurants.get(c);
+		    	  }
+		      }
+		      for (int c = 0; c < clients.size(); c++) {
+		    	  if ((clients.get(c).getIdentificationNumber()).equals(myOrder.getClientCode())) {
+		    		  myClient = clients.get(c);
+		    	  }
+		      }
+		      ArrayList<String> myOrder2 = myOrder.getProductList();
+		      ArrayList<Integer> myOrderQuantities = myOrder.getQuantitiesList();
+		      String orderProducts = "(";
+		      for (int b = 0; b < myOrder2.size(); b++) {
+		    	  for (int v = 0; v < products.size(); v++) {
+		    		  if ((myOrder2.get(b)).equals(products.get(v).getCode())) {
+		    			  orderProducts += (products.get(v).getName()) + "x" + myOrderQuantities.get(b) + " : ";
+		    		  }
+		    	  }
+		      }
+		      orderProducts += ")";
+		      objectReport.add(new objectReportCSV(myRestaurant.getName(), myRestaurant.getNameAdmin(),myRestaurant.getNit(),myClient.getName(),myClient.getPhone(),myClient.getAddress(),myClient.getIdentificationType(),myClient.getIdentificationNumber(), orderProducts, myOrder.getDateOrder()));
+		    }
+		    Collections.sort(objectReport);
+		    for (int c = 0; c < objectReport.size(); c++) {
+		    	pw.write(objectReport.get(c).name + separator + objectReport.get(c).nameadmin + separator + objectReport.get(c).rnit + separator + objectReport.get(c).cname + separator + objectReport.get(c).cphone + separator + objectReport.get(c).caddress + separator + objectReport.get(c).ciden + separator + objectReport.get(c).cidennumber + separator + objectReport.get(c).orderProducts + separator + objectReport.get(c).date);
+		    }
+		    pw.close();
+		} catch (FileNotFoundException e) {
+			message = e.getMessage();
+		}
 		return message;
 	}
 	

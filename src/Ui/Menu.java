@@ -325,7 +325,10 @@ public class Menu {
 				bw.write(index.getDescriptionSelectedProducts(cr) + "Enter a product code to add, the product must be of the restaurant code\n");
 				bw.flush();
 				String cpa = br.readLine();
-				bw.write(index.addProductToListOrder(cr, cpa, codeOrder) + "You want add one more product?\n(1) Yes\n(2) No\n");
+				bw.write("Enter the quantity to buy");
+				bw.flush();
+				int quantity = Integer.parseInt(br.readLine());
+				bw.write(index.addProductToListOrder(cr, cpa, codeOrder, quantity) + "You want add one more product?\n(1) Yes\n(2) No\n");
 				bw.flush();
 				int tempRepeat = Integer.parseInt(br.readLine());
 				if (tempRepeat == 1) {
@@ -357,8 +360,16 @@ public class Menu {
 		bw.flush();
 	}
 	
-	private void generateCSVOrdersReport() {
-		
+	private void generateCSVOrdersReport() throws IOException {
+		bw.write("Enter the character with which the data will be separated: ");
+		bw.flush();
+		String separator = br.readLine();
+		bw.write("Enter the name for the CSV file (do not put the extension, it will put itself): ");
+		bw.flush();
+		String fileName = br.readLine();
+		String response = index.createReportCSVOrders(fileName, separator);
+		bw.write(response);
+		bw.flush();
 	}
 	
 }
