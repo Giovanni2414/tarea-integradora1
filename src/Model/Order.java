@@ -12,6 +12,7 @@ public class Order implements Serializable {
 	private String clientCode;
 	private String restaurantNit;
 	private ArrayList<String> productList;
+	private String status;
 	
 	public Order (String clientCode, String restaurantNit) {
 		code = "";
@@ -25,13 +26,15 @@ public class Order implements Serializable {
 		int month = Calendar.MONTH;
 		int year = Calendar.YEAR;
 		dateOrder = String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
+		status = "Solicited";
 	}
 	
+	@Override
 	public String toString() {
-		String msg = "Code: " + getCode() + " - Date: " + getDateOrder() + " - Restaurant ID: " + getRestaurantNit();
+		String msg = "-------------------\nCode: " + getCode() + " - Date: " + getDateOrder() + " - Restaurant ID: " + getRestaurantNit() + "- Status: " + status + " - Codes of shopped products: ";
 		for (int c = 0; c < productList.size(); c++) {
 			if ((c+1) == productList.size()) {
-				msg += productList.get(c);
+				msg += productList.get(c) + "\n";
 			} else {
 				msg += productList.get(c) + ",";
 			}
@@ -56,6 +59,29 @@ public class Order implements Serializable {
 	}
 	
 	/** Getters and Setters */
+	public int getStatus() {
+		int res = 0;
+		if (status.equals("Solicited")) {
+			res = 1;
+		} else if (status.equals("In process")) {
+			res = 2;
+		} else if (status.equals("Send")) {
+			res = 3;
+		} else {
+			res = 4;
+		}
+		return res;
+	}
+	
+	public void setStatus(int intToConvert) {
+		switch (intToConvert) {
+		case 1: status = "Solicited"; break;
+		case 2: status = "In process"; break;
+		case 3: status = "Send"; break;
+		case 4: status = "Delivered"; break;
+		}
+	}
+	
 	public void setCode(String code) {
 		this.code = code;
 	}

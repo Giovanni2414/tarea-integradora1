@@ -10,6 +10,7 @@ public class Product implements Serializable {
 	private String description;
 	private double price;
 	private String restaurantNit;
+	
 	public Product(String code, String name, String description, double price, String restaurantNit) {
 		this.code = code;
 		this.name = name;
@@ -21,7 +22,7 @@ public class Product implements Serializable {
 	@Override
 	public String toString() {
 		String msg = "-------------------";
-		msg += "Code:" + getCode() + " - Name:" + getName() + " - Description:" + getDescription() + " - Price:" + getPrice() + "-Restaurant Code:" + getRestaurantNit();
+		msg += "Code:" + getCode() + " - Name:" + getName() + " - Description:" + getDescription() + " - Price:" + getPrice() + "-Restaurant Code:" + getRestaurantNit() + "\n";
 		return msg;
 	}
 	

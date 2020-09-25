@@ -1,9 +1,11 @@
 package Model;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -13,9 +15,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+
 import CustomExceptions.ClientDontExistException;
+import CustomExceptions.InvalidChangeStatusException;
 import CustomExceptions.RestaurantDontExistException;
+import CustomExceptions.SameStatusException;
 import CustomExceptions.InvalidOptionException;
+import CustomExceptions.OrderDontExistException;
+import CustomExceptions.ProductDontExistException;
 
 public class Software {
 	
@@ -33,7 +40,6 @@ public class Software {
 	
 	public void addRestaurant(String n, String nit, String adN) {
 		restaurants.add(new Restaurant(n, adN, nit));
-		Collections.sort(restaurants);
 	}
 	
 	public String addProduct(String cd, String n, String d, double p, String rn) {
@@ -121,37 +127,107 @@ public class Software {
 		return msg;
 	}
 	
-	public String editClientData(String code, int option, String data) {
-		for (int c = 0; c < clients.size(); c++) {
-			if ((clients.get(c).getIdentificationNumber()).equals(code)) {
-				switch (option) {
-					case 1: clients.get(c).setIdentificationType(Integer.parseInt(data)); break;
-					case 2: clients.get(c).setName(data); break;
-					case 3: clients.get(c).setPhone(data); break;
-					case 4: clients.get(c).setAddress(data); break;
-					case 5: clients.get(c).setIdentificationNumber(data); break;
+	public String editProductData(String code, int option, String data) throws ProductDontExistException, RestaurantDontExistException {
+		String msg = "Product data has been updated";
+		try {
+			verifyProduct(code);
+			for (int c = 0; c < products.size(); c++) {
+				if ((products.get(c).getCode()).equals(code)) {
+					switch (option) {
+						case 1: products.get(c).setCode(data); break;
+						case 2: products.get(c).setName(data); break;
+						case 3: products.get(c).setDescription(data); break;
+						case 4: products.get(c).setPrice(Double.parseDouble(data)); break;
+						case 5: verifyRestaurant(data); products.get(c).setRestaurantNit(data); break;
+					}
 				}
-				//Bubble sort algorithm
-				int n = clients.size();
-				for (int i = 0; i < n - 1; i++) {
-					for (int j = 0; j < n - i - 1; j++) {
-						int res = 0;
-						String[] name1S = clients.get(j).getName().split(" ");
-						String[] name2S = clients.get(j + 1).getName().split(" ");
-						res = String.valueOf(name1S[0].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[0].charAt(0)));
-						if (res == 0) {
-							res = String.valueOf(name1S[1].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[1].charAt(0)));
-						}
-						if (res >= 1) {
-							Client temp = clients.get(j);
-							clients.set(j, clients.get(j + 1));
-							clients.set(j + 1, temp);
+			}
+		} catch (ProductDontExistException e) {
+			msg = e.getMessage();
+		}
+		return msg;
+	}
+	
+	public String editClientData(String code, int option, String data) {
+		String msg = "Client data has been updated";
+		try {
+			verifyClient(code);
+			for (int c = 0; c < clients.size(); c++) {
+				if ((clients.get(c).getIdentificationNumber()).equals(code)) {
+					switch (option) {
+						case 1: clients.get(c).setIdentificationType(Integer.parseInt(data)); break;
+						case 2: clients.get(c).setName(data); break;
+						case 3: clients.get(c).setPhone(data); break;
+						case 4: clients.get(c).setAddress(data); break;
+						case 5: clients.get(c).setIdentificationNumber(data); break;
+					}
+					//Bubble sort algorithm
+					int n = clients.size();
+					for (int i = 0; i < n - 1; i++) {
+						for (int j = 0; j < n - i - 1; j++) {
+							int res = 0;
+							String[] name1S = clients.get(j).getName().split(" ");
+							String[] name2S = clients.get(j + 1).getName().split(" ");
+							res = String.valueOf(name1S[0].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[0].charAt(0)));
+							if (res == 0) {
+								res = String.valueOf(name1S[1].charAt(0)).compareToIgnoreCase(String.valueOf(name2S[1].charAt(0)));
+							}
+							if (res >= 1) {
+								Client temp = clients.get(j);
+								clients.set(j, clients.get(j + 1));
+								clients.set(j + 1, temp);
+							}
 						}
 					}
 				}
 			}
+		} catch (ClientDontExistException e) {
+			msg = e.getMessage();
 		}
-		return "Client data has been updated";
+		
+		return msg;
+	}
+	
+	public String editOrder(String code, int option, String data) throws ClientDontExistException, NumberFormatException, InvalidOptionException {
+		String msg = "";
+		try {
+			verifyOrder(code);
+			for (int c = 0; c < orders.size(); c++) {
+				if ((orders.get(c).getCode()).equals(code)) {
+					switch (option) {
+						case 1:
+							verifyClient(data);
+							orders.get(c).setClientCode(data);
+							break;
+						case 2:
+							int compareStatus = orders.get(c).getStatus();
+							confirmStatusChange(Integer.parseInt(data), compareStatus);
+							orders.get(c).setStatus(Integer.parseInt(data));
+							break;
+					}
+				}
+			}
+		} catch (OrderDontExistException e) {
+			msg = e.getMessage();
+		} catch (InvalidChangeStatusException e) {
+			msg = e.getMessage();
+		} catch (SameStatusException e) {
+			msg = e.getMessage();
+		} catch (ClientDontExistException e) {
+			msg = e.getMessage();
+		}
+		return msg;
+	}
+	
+	public void confirmStatusChange(int c1, int c2) throws SameStatusException, InvalidChangeStatusException, InvalidOptionException {
+		if (c1 < 1 || c1 > 4) {
+			throw new InvalidOptionException();
+		}
+		if (c1 < c2) {
+			throw new InvalidChangeStatusException();
+		} else if (c1 == c2) {
+			throw new SameStatusException();
+		}
 	}
 	
 	public String addProductToListOrder(String cr, String cp, String orderC) {
@@ -195,6 +271,30 @@ public class Software {
 		}
 		if (!restaurantFind) {
 			throw new RestaurantDontExistException();
+		}
+	}
+	
+	public void verifyOrder(String code) throws OrderDontExistException {
+		boolean finded = false;
+		for (int c = 0; c < orders.size() && !finded; c++) {
+			if ((orders.get(c).getCode()).equalsIgnoreCase(code)) {
+				finded = true;
+			}
+		}
+		if (!finded) {
+			throw new OrderDontExistException();
+		}
+	}
+	
+	public void verifyProduct(String code) throws ProductDontExistException {
+		boolean finded = false;
+		for (int c = 0; c < products.size() && !finded; c++) {
+			if ((products.get(c).getCode()).equalsIgnoreCase(code)) {
+				finded = true;
+			}
+		}
+		if (!finded) {
+			throw new ProductDontExistException();
 		}
 	}
 	
@@ -255,7 +355,7 @@ public class Software {
 	
 	public String getDescriptionAllProducts() {
 		String message = "\n-------------------\n";
-		message += "    Clients    \n";
+		message += "    Products    \n";
 		for (int c = 0; c < products.size(); c++) {
 			message += products.get(c);
 		}
@@ -295,20 +395,24 @@ public class Software {
 					oos = new ObjectOutputStream(new FileOutputStream("data/restaurants.tr1"));
 				    oos.writeObject(restaurants);
 				    oos.close();
+				    msg = "Restaurants data saved successfully\n";
 					break;
 				case 2:
 					oos = new ObjectOutputStream(new FileOutputStream("data/products.tr1"));
 				    oos.writeObject(products);
 				    oos.close();
+				    msg = "Products data saved successfully\n";
 					break;
 				case 3:
 					oos = new ObjectOutputStream(new FileOutputStream("data/clients.tr1"));
 				    oos.writeObject(clients);
+				    msg = "Clients data saved successfully\n";
 				    oos.close();
 					break;
 				case 4:
 					oos = new ObjectOutputStream(new FileOutputStream("data/orders.tr1"));
 				    oos.writeObject(orders);
+				    msg = "Orders data saved successfully\n";
 				    oos.close();
 					break;
 			}
@@ -318,6 +422,7 @@ public class Software {
 		return msg;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String loadData(int objectLoad) throws IOException, ClassNotFoundException {
 		String msg = "";
 		try {
@@ -329,7 +434,7 @@ public class Software {
 						ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 					    restaurants = (List)ois.readObject();
 					    ois.close();
-					    msg = "Restaurants data has been loaded succesfully";
+					    msg = "Restaurants data has been loaded succesfully\n";
 					}
 					break;
 				case 2:
@@ -338,7 +443,7 @@ public class Software {
 						ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 					    clients = (List)ois.readObject();
 					    ois.close();
-					    msg = "Clients data has been loaded succesfully";
+					    msg = "Clients data has been loaded succesfully\n";
 					}
 					break;
 				case 3:
@@ -347,16 +452,16 @@ public class Software {
 						ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 					    products = (List)ois.readObject();
 					    ois.close();
-					    msg = "Products data has been loaded succesfully";
+					    msg = "Products data has been loaded succesfully\n";
 					}
 					break;
 				case 4:
 					file = new File("data/orders.tr1");
 					if(file.exists()){
 						ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-					    orders = (List)ois.readObject();
+					    orders = (List) ois.readObject();
 					    ois.close();
-					    msg = "Orders data has been loaded succesfully";
+					    msg = "Orders data has been loaded succesfully\n";
 					}
 					break;
 			}
@@ -366,6 +471,72 @@ public class Software {
 			msg = e.getMessage();
 		}
 		return msg;
+	}
+	
+	public String importDataFromCSV(String fileName, int classImport) throws IOException, NumberFormatException, InvalidOptionException {
+		String msg = "Data imported successfully";
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("data/" + fileName + ".csv"));
+			String line = br.readLine();
+			switch (classImport) {
+				case 1:
+					while(line!=null){
+					      String[] parts = line.split(",");
+					      addRestaurant(parts[0], parts[1], parts[2]);
+					      line = br.readLine();
+					}
+					break;
+				case 2:
+					while(line!=null){
+					      String[] parts = line.split(",");
+					      addClient(Integer.parseInt(parts[0]), parts[1], parts[2], parts[3], parts[4]);
+					      line = br.readLine();
+					}
+					break;
+				case 3:
+					while(line!=null){
+					      String[] parts = line.split(",");
+					      addProduct(parts[2], parts[0], parts[3], Double.parseDouble(parts[1]), parts[4]);
+					      line = br.readLine();
+					}
+					break;
+			}
+			br.close();
+		} catch (IOException e) {
+			msg = e.getMessage();
+		}
+		return msg;
+	}
+	
+	public String getSortedRestaurants() {
+		List<Restaurant> arrayCopy = new ArrayList<>();
+		for (int c = 0; c < restaurants.size(); c++) {
+			arrayCopy.add(restaurants.get(c));
+		}
+		Collections.sort(arrayCopy);
+		String message = "\n-------------------\n";
+		message += "    Restaurants    \n";
+		for (int c = 0; c < arrayCopy.size(); c++) {
+			message += arrayCopy.get(c);
+		}
+		message += "-------------------\n";
+		return message;
+	}
+	
+	public String getSortedClients() {
+		List<Client> arrayCopy = new ArrayList<>();
+		for (int c = 0; c < clients.size(); c++) {
+			arrayCopy.add(clients.get(c));
+		}
+		numberClientComparator c = new numberClientComparator();
+		Collections.sort(arrayCopy, c);
+		String message = "\n-------------------\n";
+		message += "    Clients    \n";
+		for (int c1 = 0; c1 < arrayCopy.size(); c1++) {
+			message += arrayCopy.get(c1);
+		}
+		message += "-------------------\n";
+		return message;
 	}
 	
 }
