@@ -917,4 +917,41 @@ public class Software {
 		return message;
 	}
 	
+	/**
+	 * Metodo para buscar un cliente por busqueda binaria
+	 * <br> pre: ArrayList de clientes inicializado
+	 * <br> post: 
+	 * @param name Nombre del cliente a buscar
+	 * @return Retorna un string con datos del cliente si se encontró uno, si no, retorna la notificacion de error
+	 */
+	public String binarySearchClient(String name) {
+		String msg = "";
+		long start = System.currentTimeMillis();
+		boolean find = false;
+		int in = 0;
+		int fin = clients.size();
+		while (in <= fin && !find) {
+			int pos = (int) Math.floor((in+fin)/2);
+			if (pos != clients.size()) {
+				String el = clients.get(pos).getName();
+				int compar = name.compareToIgnoreCase(el);
+				if (compar == 0) {
+					msg += clients.get(pos);
+					msg += "-------------------\n";
+					find = true;
+				} else if (compar < 0) {
+					fin = pos - 1;
+				} else if (compar > 0) {
+					in = pos + 1;
+				}
+			}
+		}
+		long end = System.currentTimeMillis();
+		if (find == false) {
+			msg += "A client with this name don't exists\n";
+		}
+		msg += "Ejecution time: " + (end - start) + "ms";
+		return msg;
+	}
+	
 }

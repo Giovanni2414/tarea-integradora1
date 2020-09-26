@@ -85,6 +85,7 @@ public class Client implements Serializable {
 		return response;
 	}
 	
+	@Override
 	public String toString() {
 		String message = "-------------------\n";
 		message += "Name:" + getName() + " - Type:" + getIdentificationType() + " - Code:" + getIdentificationNumber() + " - Phone:" + getPhone() + " - ";

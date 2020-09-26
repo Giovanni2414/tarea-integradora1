@@ -73,7 +73,12 @@ public class Menu {
 		switch (option) {
 			case 1: bw.write(index.getSortedRestaurants()); break;
 			case 2: bw.write(index.getSortedClients()); break;
-			case 3: break;
+			case 3:
+				bw.write("Enter a client name to make a binary search: ");
+				bw.flush();
+				String name = br.readLine();
+				bw.write(index.binarySearchClient(name));
+				break;
 		}
 		bw.flush();
 	}
