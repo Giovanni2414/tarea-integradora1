@@ -523,9 +523,9 @@ public class Software {
 			long number1 = Long.parseLong(c1.getPhone());
 			long number2 = Long.parseLong(c2.getPhone());
 			if (number1 < number2) {
-				response = 1;
-			} else if (number1 > number2) {
 				response = -1;
+			} else if (number1 > number2) {
+				response = 1;
 			}
 			return response;
 		}
