@@ -4,16 +4,51 @@ import java.io.Serializable;
 
 public class Client implements Serializable {
 	
+	/**
+	 * Version de la clase
+	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Constante para el tipo de identificacion cedula
+	 */
 	private final int CEDULA = 1;
+	/**
+	 * Constante para el tipo de identificacion tarjeta de identidad
+	 */
 	private final int TARJETA_IDENTIDAD = 2;
+	/**
+	 * Constante para el tipo de identificacion pasaporte
+	 */
 	private final int PASSPORT = 3;
+	/**
+	 * tipo de identificacion en String
+	 */
 	private String identificationType;
+	/**
+	 * Numero de identificacion
+	 */
 	private String identificationNumber;
+	/**
+	 * Nombre del cliente
+	 */
 	private String name;
+	/**
+	 * Telefono del cliente
+	 */
 	private String phone;
+	/**
+	 * Direccion del cliente
+	 */
 	private String address;
 	
+	/**
+	 * Constructor de la clase
+	 * @param identificationType Tipo de identificacion en entero
+	 * @param identificationNumber Numero de indentificacion, String
+	 * @param name Nombre del cliente, String
+	 * @param phone Telefono del cliente, String
+	 * @param address Direccion de cliente, String
+	 */
 	public Client(int identificationType, String identificationNumber, String name, String phone, String address) {
 		this.identificationNumber = identificationNumber;
 		this.name = name;
@@ -32,6 +67,12 @@ public class Client implements Serializable {
 		}
 	}
 	
+	/**
+	 * Obtener el tipo de identificacion en formato String
+	 * <br>Pre: Variable identificationType con algún valor String
+	 * <br>Post:
+	 * @return Un entero que hace referencia a un tipo de identificacion
+	 */
 	public int getIdentificationTypeForExport() {
 		int response = 0;
 		if (identificationType.equals("Cédula")) {

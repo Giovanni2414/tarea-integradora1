@@ -4,13 +4,39 @@ import java.io.Serializable;
 
 public class Product implements Serializable {
 	
+	/**
+	 * Version de la clase
+	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Codigo del producto
+	 */
 	private String code;
+	/**
+	 * Nombre del producto
+	 */
 	private String name;
+	/**
+	 * Descripcion del producto
+	 */
 	private String description;
+	/**
+	 * Precio del producto
+	 */
 	private double price;
+	/**
+	 * Identificador del restaurante al que pertenece
+	 */
 	private String restaurantNit;
 	
+	/**
+	 * Constructor de la clase Product
+	 * @param code Codigo del producto
+	 * @param name Nombre del producto
+	 * @param description Descripcion del producto
+	 * @param price Precio del producto 
+	 * @param restaurantNit Restaurante codigo al cual pertenece el producto
+	 */
 	public Product(String code, String name, String description, double price, String restaurantNit) {
 		this.code = code;
 		this.name = name;
@@ -21,7 +47,7 @@ public class Product implements Serializable {
 	
 	@Override
 	public String toString() {
-		String msg = "-------------------";
+		String msg = "-------------------\n";
 		msg += "Code:" + getCode() + " - Name:" + getName() + " - Description:" + getDescription() + " - Price:" + getPrice() + "-Restaurant Code:" + getRestaurantNit() + "\n";
 		return msg;
 	}

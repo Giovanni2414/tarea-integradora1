@@ -14,7 +14,7 @@ class ProductTest {
 	}
 
 	@Test
-	public void setCodeTest() {
+	public void setNameTest() {
 		setupStage1();
 		product.setName("McCheese");
 		assertEquals("Names don't match", "McCheese", product.getName());

@@ -29,6 +29,11 @@ public class Menu {
 	public void startMenu() throws NumberFormatException, IOException, InvalidOptionException, RestaurantDontExistException, ClientDontExistException, ClassNotFoundException, ProductDontExistException, OrderDontExistException {
 		final int EXIT_OPTION = 0;
 		int option = 9999;
+		for (int c = 1; c <= 4; c++) {
+				bw.write(index.loadData(c));
+				bw.flush();
+			
+		}
 		do {
 			bw.write(getMenuMessage());
 			bw.flush();
@@ -137,6 +142,7 @@ public class Menu {
 		String code = br.readLine();
 		bw.write("Enter an option to edit\n(1) Edit code\n(2) Edit name\n(3) Edit description"
 				+ "\n(4) Edit price\n(5)Edit restaurant nit\nOption: ");
+		bw.flush();
 		int option = Integer.parseInt(br.readLine());
 		bw.write("Enter the new data: ");
 		bw.flush();
@@ -193,8 +199,7 @@ public class Menu {
 		message += "(0) Exit menu\n";
 		message += "(1) Import restaurant data\n";
 		message += "(2) Import clients data\n";
-		message += "(3) Import products data\n";
-		message += "(4) Import orders data\nOption: ";
+		message += "(3) Import products data\nOption: ";
 		bw.write(message);
 		bw.flush();
 		int option = Integer.parseInt(br.readLine());
@@ -205,7 +210,6 @@ public class Menu {
 			case 1: bw.write(index.importDataFromCSV(fileName, option)); break;
 			case 2: bw.write(index.importDataFromCSV(fileName, option)); break;
 			case 3: bw.write(index.importDataFromCSV(fileName, option)); break;
-			case 4:  break;
 		}
 		bw.flush();
 	}
@@ -363,16 +367,22 @@ public class Menu {
 	}
 	
 	private void generateCSVOrdersReport() throws IOException {
-		bw.write("Enter the character with which the data will be separated: ");
+		bw.write("Enter the character with which the data will be separated\nIt can't be ( : ): ");
 		bw.flush();
 		String separator = br.readLine();
-		bw.write("Enter the name for the CSV file (do not put the extension, it will put itself): ");
+		if (separator.equalsIgnoreCase(":")) {
+			bw.write("You can't use this separator");
+			bw.flush();
+		} else {
+			bw.write("Enter the name for the CSV file (do not put the extension, it will put itself): ");
 		bw.flush();
 		bw.write("Please, be patient, we are creating for you a beautiful report :) ...\n");
 		String fileName = br.readLine();
 		String response = index.createReportCSVOrders(fileName, separator);
 		bw.write(response);
 		bw.flush();
+		}
+		
 	}
 	
 }

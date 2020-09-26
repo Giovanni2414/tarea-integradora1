@@ -6,15 +6,44 @@ import java.util.Date;
 
 public class Order implements Serializable {
 	
+	/**
+	 * Version de la clase
+	 */
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Codigo de la orden
+	 */
 	private String code;
+	/**
+	 * Fecha de la orden
+	 */
 	private Date dateOrder;
+	/**
+	 * Cliente al cual pertenece la orden
+	 */
 	private String clientCode;
+	/**
+	 * Codigo del restaurante al cual se le pidio la orden
+	 */
 	private String restaurantNit;
+	/**
+	 * Lista con los productos comprados
+	 */
 	private ArrayList<String> productList;
+	/**
+	 * Lista con las cantidades compradas
+	 */
 	private ArrayList<Integer> quantities;
+	/**
+	 * Estado de la orden
+	 */
 	private String status;
 	
+	/**
+	 * Constructor de la clase
+	 * @param clientCode Codigo del cliente que hizo la orden
+	 * @param restaurantNit Código del restaurante al cual se le pidió la orden
+	 */
 	public Order (String clientCode, String restaurantNit) {
 		code = "";
 		for (int c = 0; c < 5; c++) {
@@ -42,6 +71,12 @@ public class Order implements Serializable {
 		return msg;
 	}
 	
+	/**
+	 * Metodo para añadir la cantidad de un producto comprado
+	 * <br>Pre: El ARrayList quantities debe estar inicializado
+	 * <br>Post: Objeto añadido al arrayList quantities
+	 * @param q Cantidad de un producto
+	 */
 	public void addQuantity(int q) {
 		quantities.add(q);
 	}
@@ -50,6 +85,12 @@ public class Order implements Serializable {
 		return quantities;
 	}
 	
+	/**
+	 * Metodo para obtener una pequeña lista con los nombres y productos comprados para exportar al CSV
+	 * <br>Pre: ArrayLists de products debe estar inicializado
+	 * <br>Post: 
+	 * @return Mensaje con una lista de los productos comprados
+	 */
 	public String getListProductsToExport() {
 		String msg = "";
 		for (int c = 0; c < productList.size(); c++) {
@@ -62,6 +103,12 @@ public class Order implements Serializable {
 		return msg;
 	}
 	
+	/**
+	 * Metodo para añadir un producto a la orden
+	 * <br>Pre: ArrayList productLsit debe estar inicializado
+	 * <br>Post: Objeto añadido al arrayList de productos
+	 * @param code
+	 */
 	public void addProduct(String code) {
 		productList.add(code);
 	}

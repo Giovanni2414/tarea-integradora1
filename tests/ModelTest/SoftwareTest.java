@@ -2,6 +2,9 @@ package ModelTest;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.junit.jupiter.api.Test;
 
 import CustomExceptions.InvalidOptionException;
@@ -28,7 +31,7 @@ class SoftwareTest {
 	}
 	
 	@Test
-	public void editClientDataTest() throws InvalidOptionException {
+	public void editClientDataTest() throws InvalidOptionException, FileNotFoundException, IOException {
 		setupStage2();
 		String rs = software.editClientData("1006055396", 2, "Synyster Gates");
 		assertEquals("Edit client data code don't works", "Client data has been updated", rs);
